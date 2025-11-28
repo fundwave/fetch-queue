@@ -11,8 +11,8 @@
   },
   "scripts": {
     "build:esm": "tsc --module NodeNext --outDir ./dist/esm",
-    "build": "tsc --module commonjs --outDir ./dist/cjs",
-    "prepare": "npm run build && npm run build:esm",
+    "build:cjs": "tsc --module commonjs --outDir ./dist/cjs",
+    "build": "npm run build:cjs && npm run build:esm",
     "pretest": "jest --clearCache",
     "test": "jest --detectOpenHandles",
     "lint": "npx eslint src/index.ts",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/getfundwave/fetch-queue.git"
+    "url": "git+https://github.com/fundwave/fetch-queue.git"
   },
   "keywords": [
     "js",
@@ -30,9 +30,9 @@
   "author": "The Fundwave Authors",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/getfundwave/fetch-queue/issues"
+    "url": "https://github.com/fundwave/fetch-queue/issues"
   },
-  "homepage": "https://github.com/getfundwave/fetch-queue#readme",
+  "homepage": "https://github.com/fundwave/fetch-queue#readme",
   "devDependencies": {
     "@babel/cli": "^7.23.0",
     "@babel/core": "^7.23.2",

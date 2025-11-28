@@ -57,6 +57,12 @@ jobs:
           skip-push: "true"
           skip-commit: "true"
           bump-policy: "ignore"
+      
+      - name: Setup .npmrc
+        run: |
+          echo "@fundwave:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+          echo "ignore-scripts=true" >> ~/.npmrc
 
       - name: Install dependencies
         run: npm ci
@@ -72,12 +78,11 @@ jobs:
           git config user.name "fundabot"
           git commit -a -m "CI: bumps @fundwave/fetch-queue to $VERSION" -m "[skip ci]"
 
-      - name: Publish package to gitlab
-        env:
-          GITLAB_TOKEN: ${{secrets.GITLAB_TOKEN}}
+      - name: Build package
+        run: npm run build
+
+      - name: Publish package to github
         run: |
-          echo @fundwave:registry=https://gitlab.com/api/v4/projects/24877554/packages/npm/ > ~/.npmrc
-          echo //gitlab.com/api/v4/projects/24877554/packages/npm/:_authToken=$GITLAB_TOKEN >> ~/.npmrc
           npm publish --tag $BRANCH_TAG
 
       - name: Publish package to npm
