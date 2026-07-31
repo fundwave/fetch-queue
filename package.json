@@ -1,6 +1,6 @@
 {
   "name": "@fundwave/fetchq",
-  "version": "1.2.4-github-package.0",
+  "version": "1.2.4-github-package.1",
   "description": "Queue for fetch requests",
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
