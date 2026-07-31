@@ -91,7 +91,7 @@ jobs:
           npm publish --tag $BRANCH_TAG
 
       - name: Publish package to npm
-        if: ${{ github.ref_name == 'main'}}
+        # if: ${{ github.ref_name == 'main'}}
         run: |
           echo registry=https://registry.npmjs.org/ >> ~/.npmrc
           npm publish --tag $BRANCH_TAG --access public
