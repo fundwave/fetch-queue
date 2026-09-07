@@ -1,7 +1,7 @@
 import { FetchQueue } from "../src/index";
 import { PreHook } from "../src/interfaces";
 
-const urls = ["https://httpstat.us/500", "https://dummyjson.com/products/1", "https://dummyjson.com/products/2", "https://dummyjson.com/products/3"];
+const urls = ["https://sandbox.fundwave.com/api/activity/healthchecks", "https://sandbox.fundwave.com/api/user/healthcheck", "https://sandbox.fundwave.com/api/activity/healthcheck", "https://sandbox.fundwave.com/services/api/instance/ssoconfig"];
 
 async function wait(time: number = 1200) {
   return new Promise((resolve) => {
@@ -201,7 +201,7 @@ describe("test case with start and pause queue", () => {
           expect(fetchQueue.getActiveRequests()).toBe(0);
           break;
         case 2:
-          const regExp = /https:\/\/dummyjson\.com.*/g;
+          const regExp = /https:\/\/sandbox\.fundwave\.com\/api\/.*\/healthcheck$/g;
           fetchQueue.emptyQueue(regExp);
           expect(fetchQueue.getQueueLength()).toBe(0);
           expect(fetchQueue.getActiveRequests()).toBe(0);
@@ -230,15 +230,15 @@ describe("test case with start and pause queue", () => {
     
     const fetchQueue = new FetchQueue({ 
       concurrent: 1,
-      pre: [{ pattern: new RegExp("https://dummyjson.com/products/\\d+"), hook }]
+      pre: [{ pattern: new RegExp("https://sandbox.fundwave.com/api/user/.*"), hook }]
     });
 
     fetchQueue.startQueue();
 
     const fetch = fetchQueue.getFetchMethod();
     await Promise.allSettled([
-      fetch("https://dummyjson.com/products/1"),
-      fetch("https://dummyjson.com/test"),
+      fetch("https://sandbox.fundwave.com/api/user/healthcheck"),
+      fetch("https://sandbox.fundwave.com/api/activity/healthcheck"),
     ]);
 
     expect(hook).toHaveBeenCalledTimes(1);
@@ -253,10 +253,10 @@ describe("test case with start and pause queue", () => {
     
     const fetchQueue = new FetchQueue({ 
       concurrent: 1,
-      queuingPatterns: [ new RegExp("https://dummyjson.com/products/*") ],
+      queuingPatterns: [ new RegExp("https://sandbox.fundwave.com/api/user/.*") ],
       pre: [
-        { pattern: new RegExp("https://dummyjson.com/products/\\d+"), hook: notToBeCalled },
-        { pattern: new RegExp("https://dummyjson.com/test"), hook: toBeCalled },
+        { pattern: new RegExp("https://sandbox.fundwave.com/api/user/.*"), hook: notToBeCalled },
+        { pattern: new RegExp("https://sandbox.fundwave.com/api/activity/healthcheck"), hook: toBeCalled },
       ]
     });
 
@@ -264,8 +264,8 @@ describe("test case with start and pause queue", () => {
     fetchQueue.pauseQueue();
 
     const fetch = fetchQueue.getFetchMethod();
-    fetch("https://dummyjson.com/products/1"),
-    await fetch("https://dummyjson.com/test"),
+    fetch("https://sandbox.fundwave.com/api/user/healthcheck"),
+    await fetch("https://sandbox.fundwave.com/api/activity/healthcheck"),
 
     expect(notToBeCalled).toHaveBeenCalledTimes(0);
     expect(toBeCalled).toHaveBeenCalled();
@@ -298,7 +298,7 @@ describe("test case with start and pause queue", () => {
 
     expect(responses.length).toBe(8);
     responses.forEach((resp) => {
-      if (resp.ok) expect(resp.json()).resolves.not.toBeNull();
+      if (resp.ok) expect(resp.text()).resolves.not.toBeNull();
     })
   }, TEST_TIMEOUT);
 });
