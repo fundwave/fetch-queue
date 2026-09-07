@@ -13,6 +13,7 @@
     "build:esm": "tsc --module NodeNext --outDir ./dist/esm",
     "build:cjs": "tsc --module commonjs --outDir ./dist/cjs",
     "build": "npm run build:cjs && npm run build:esm",
+    "prepare": "npm run build",
     "pretest": "jest --clearCache",
     "test": "jest --detectOpenHandles",
     "lint": "npx eslint src/index.ts",
